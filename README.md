@@ -14,7 +14,7 @@ npm run yarn
 npm run build
 
 # Serve production server
-NODE_ENV=production npm start
+NODE_ENV=production npm start-server
 ```
 
 The server should start at http://localhost:8000/.

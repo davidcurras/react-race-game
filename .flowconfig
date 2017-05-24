@@ -1,26 +1,45 @@
 [ignore]
+; We fork some components by platform
+.*/*[.]android.js
+
+; Ignore "BUCK" generated dirs
+<PROJECT_ROOT>/\.buckd/
+
+; Ignore unexpected extra "@providesModule"
+.*/node_modules/.*/node_modules/fbjs/.*
+
+;https://github.com/facebook/flow/issues/1891#issuecomment-284985104
+.*/node_modules/react-native-experimental-navigation/.*
+
+; Ignore duplicate module providers
+; For RN Apps installed via npm, "Libraries" folder is inside
+; "node_modules/react-native" but in the source repo it is in the root
+.*/Libraries/react-native/React.js
+.*/Libraries/react-native/ReactNative.js
+
+.*/node_modules/react-native/local-cli/server/middleware/heapCapture/src/index.js
+
 .*/.git/.*
 .*/build/.*
 .*/coverage/.*
 
-.*/node_modules/react-side-effect/node_modules/.*
-.*/node_modules/redux-offline/src/defaults/persist.native.js
-
-
 [include]
 
-
 [libs]
+node_modules/react-native/Libraries/react-native/react-native-interface.js
+node_modules/react-native/flow
 flow/
 
-
 [options]
-emoji=true
+; emoji=true
 
-module.name_mapper.extension='.*\.css$' -> '<PROJECT_ROOT>/flow/stubs/css-module.js'
-module.name_mapper.extension='.*\.\(eot\|gif\|jpg\|jpeg\|mp4\|otf\|png\|svg\|ttf\|woff\|woff2\)$' -> '<PROJECT_ROOT>/flow/stubs/url-loader.js'
+module.system=haste
 
-module.use_strict=true
+experimental.strict_type_args=true
+
+munge_underscores=true
+
+module.name_mapper='^[./a-zA-Z0-9$_-]+\.\(bmp\|gif\|jpg\|jpeg\|png\|psd\|svg\|webp\|m4v\|mov\|mp4\|mpeg\|mpg\|webm\|aac\|aiff\|caf\|m4a\|mp3\|wav\|html\|pdf\)$' -> 'RelativeImageStub'
 
 module.file_ext=.js
 module.file_ext=.json
@@ -31,6 +50,15 @@ module.name_mapper='^server\/' -> '<PROJECT_ROOT>/server/'
 module.name_mapper='^src\/' -> '<PROJECT_ROOT>/src/'
 module.name_mapper='^static\/' -> '<PROJECT_ROOT>/static/'
 
+suppress_type=$FlowIssue
+suppress_type=$FlowFixMe
+suppress_type=$FixMe
+
+suppress_comment=\\(.\\|\n\\)*\\$FlowFixMe\\($\\|[^(]\\|(\\(>=0\\.\\(3[0-8]\\|[1-2][0-9]\\|[0-9]\\).[0-9]\\)? *\\(site=[a-z,_]*react_native[a-z,_]*\\)?)\\)
+suppress_comment=\\(.\\|\n\\)*\\$FlowIssue\\((\\(>=0\\.\\(3[0-8]\\|1[0-9]\\|[1-2][0-9]\\).[0-9]\\)? *\\(site=[a-z,_]*react_native[a-z,_]*\\)?)\\)?:? #[0-9]+
+suppress_comment=\\(.\\|\n\\)*\\$FlowFixedInNextDeploy
+
+unsafe.enable_getters_and_setters=true
 
 [version]
-^0.44.0
+^0.38.0
